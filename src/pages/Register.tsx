@@ -19,10 +19,8 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
             <div className="flex justify-center mx-auto">
               <img className="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" />
             </div>
-            <div className="flex items-center justify-center mt-6">
-              <a href="#" className="w-1/3 pb-4 font-medium text-center text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white">
-                Register
-              </a>
+            <div className="flex items-center justify-center mt-4">
+              <h1 className="text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">Register</h1>
             </div>
             <div className="relative flex items-center mt-8">
               <span className="absolute">
@@ -58,7 +56,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
             </div>
             <div className="mt-6">
               <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
-                Sign Up
+                Register
               </button>
               <div className="mt-6 text-center ">
                 <Link to="/login">
