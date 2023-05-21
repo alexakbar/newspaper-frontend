@@ -1,0 +1,131 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import { Menu, Transition } from '@headlessui/react';
+import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+interface INavbarProps { };
+
+const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
+  const [isMobileToggleOpen, setMobileToggle] = useState(false)
+  const [isLoggedIn, setLoggedIn] = useState(false)
+
+  return (
+    <nav x-data="{ isMobileToggleOpen: false }" className="relative bg-white shadow dark:bg-gray-800">
+      <div className="container px-6 py-4 mx-auto">
+        <div className="lg:flex lg:items-center lg:justify-between">
+          <div className="flex items-center justify-between">
+            <a href="#">
+              <img className="w-auto h-6 sm:h-7" src="https://merakiui.com/images/full-logo.svg" alt="" />
+            </a>
+            {/* Mobile menu button */}
+            <div className="flex lg:hidden">
+              <button
+                onClick={() => {
+                  setMobileToggle(!isMobileToggleOpen)
+                }}
+                type="button" className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400" aria-label="toggle menu">
+                {isMobileToggleOpen ? (
+                  <svg x-show="isMobileToggleOpen" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg x-show="!isMobileToggleOpen" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8h16M4 16h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className={`${isMobileToggleOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full'} absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}>
+            <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-0">
+              <Link to="/" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                News
+              </Link>
+              {!isLoggedIn &&
+                <Link to="/login" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Login
+                </Link>
+              }
+            </div>
+            {isLoggedIn &&
+              <div className="flex items-center mt-4 lg:mt-0">
+                {/* <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
+                  <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" className="object-cover w-full h-full" alt="avatar" />
+                  </div>
+                  <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Khatab wedaa</h3>
+                </button> */}
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
+                      <h3 className="mx-2 text-gray-700 dark:text-gray-200">Full Name</h3>
+                      <div className="w-8 h-8 overflow-hidden rounded-full">
+                        <img src="/user-placeholder.png" className="object-cover w-full h-full" alt="avatar" />
+                      </div>
+                    </Menu.Button>
+                  </div>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="px-1 py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              type="submit"
+                              className={`
+                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
+                                'block w-full px-4 py-2 text-left text-sm'
+                              `}
+                            >
+                              Your Profile
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              type="submit"
+                              className={`
+                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
+                                'block w-full px-4 py-2 text-left text-sm'
+                              `}
+                            >
+                              Preferences
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              type="submit"
+                              className={`
+                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
+                                'block w-full px-4 py-2 text-left text-sm'
+                              `}
+                            >
+                              Sign out
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              </div>
+            }
+          </div>
+        </div>
+      </div >
+    </nav >
+  );
+}
+
+export default Navbar;
