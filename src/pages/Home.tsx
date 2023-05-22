@@ -1,5 +1,4 @@
 import React from 'react';
-import { MultiValue, ActionMeta, InputActionMeta, Options } from 'react-select/dist/declarations/src';
 import { Navbar } from 'src/components/common';
 import Select from 'react-select';
 
@@ -9,7 +8,10 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   const myOptions: readonly any[] = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'blueberry', label: 'Blueberry' },
+    { value: 'blackberry', label: 'Blackberry' },
+    { value: 'banana', label: 'Banana' },
   ]
 
   return (
@@ -25,11 +27,11 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
           </div>
           <div className='grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2 xl:grid-cols-4'>
             <div>
-              <label htmlFor="search" className="block text-sm text-gray-500 dark:text-gray-300">Search</label>
+              <label htmlFor="search" className="block text-sm text-gray-500 dark:text-gray-300">Search by keywords</label>
               <input type="text" placeholder="John Doe" className="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
             </div>
             <div>
-              <label htmlFor="author" className="block text-sm text-gray-500 dark:text-gray-300">Authors</label>
+              <label htmlFor="author" className="block text-sm text-gray-500 dark:text-gray-300">Filter by category</label>
               <Select
                 isMulti
                 name="colors"
@@ -42,7 +44,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
               />
             </div>
             <div>
-              <label htmlFor="source" className="block text-sm text-gray-500 dark:text-gray-300">Source</label>
+              <label htmlFor="source" className="block text-sm text-gray-500 dark:text-gray-300">Filter by source</label>
               <Select
                 isMulti
                 name="colors"
@@ -55,7 +57,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
               />
             </div>
             <div>
-              <label htmlFor="date" className="block text-sm text-gray-500 dark:text-gray-300">Date</label>
+              <label htmlFor="date" className="block text-sm text-gray-500 dark:text-gray-300">Filter by date</label>
               <input type="text" placeholder="John Doe" className="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
             </div>
           </div>
