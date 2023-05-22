@@ -1,53 +1,130 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Menu, Transition } from '@headlessui/react';
-import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Menu, Transition } from "@headlessui/react";
+import React, { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-interface INavbarProps { };
+interface INavbarProps {}
 
 const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
-  const [isMobileToggleOpen, setMobileToggle] = useState(false)
-  const [isLoggedIn, setLoggedIn] = useState(false)
+  const [isMobileToggleOpen, setMobileToggle] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [isPersonalized, setPersonalized] = useState("");
+
+  // get token from session storage
+  useEffect(() => {
+    const sessionToken = sessionStorage.getItem("token");
+    if (sessionToken !== null) {
+      setLoggedIn(true);
+    }
+
+    // get user data from session storage
+    const sessionUser = sessionStorage.getItem("user");
+
+    if (sessionUser !== null) {
+      const userData = JSON.parse(sessionUser);
+
+      // get username from user data
+      setUsername(userData.username);
+      setPersonalized(userData.is_personalized);
+    }
+  }, []);
+
+  const doLogout = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    setLoggedIn(false);
+
+    window.location.href = "/login";
+  };
 
   return (
-    <nav x-data="{ isMobileToggleOpen: false }" className="relative bg-white shadow dark:bg-gray-800">
+    <nav
+      x-data="{ isMobileToggleOpen: false }"
+      className="relative bg-white shadow dark:bg-gray-800"
+    >
       <div className="container px-6 py-4 mx-auto">
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
             <a href="#">
-              <img className="w-auto h-6 sm:h-7" src="https://merakiui.com/images/full-logo.svg" alt="" />
+              <img
+                className="w-auto h-6 sm:h-7"
+                src="https://merakiui.com/images/full-logo.svg"
+                alt=""
+              />
             </a>
             {/* Mobile menu button */}
             <div className="flex lg:hidden">
               <button
                 onClick={() => {
-                  setMobileToggle(!isMobileToggleOpen)
+                  setMobileToggle(!isMobileToggleOpen);
                 }}
-                type="button" className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400" aria-label="toggle menu">
+                type="button"
+                className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                aria-label="toggle menu"
+              >
                 {isMobileToggleOpen ? (
-                  <svg x-show="isMobileToggleOpen" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    x-show="isMobileToggleOpen"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 ) : (
-                  <svg x-show="!isMobileToggleOpen" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8h16M4 16h16" />
+                  <svg
+                    x-show="!isMobileToggleOpen"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 8h16M4 16h16"
+                    />
                   </svg>
                 )}
               </button>
             </div>
           </div>
-          <div className={`${isMobileToggleOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full'} absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}>
+          <div
+            className={`${
+              isMobileToggleOpen
+                ? "translate-x-0 opacity-100 "
+                : "opacity-0 -translate-x-full"
+            } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
+          >
             <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-0">
-              <Link to="/" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                News
-              </Link>
-              {!isLoggedIn &&
-                <Link to="/login" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+              {(isPersonalized || !isLoggedIn) && (
+                <Link
+                  to="/"
+                  className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  News
+                </Link>
+              )}
+              {!isLoggedIn && (
+                <Link
+                  to="/login"
+                  className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
                   Login
                 </Link>
-              }
+              )}
             </div>
-            {isLoggedIn &&
+            {isLoggedIn && (
               <div className="flex items-center mt-4 lg:mt-0">
                 {/* <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                   <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
@@ -57,10 +134,19 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                 </button> */}
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
-                      <h3 className="mx-2 text-gray-700 dark:text-gray-200">Full Name</h3>
+                    <Menu.Button
+                      className="flex items-center focus:outline-none"
+                      aria-label="toggle profile dropdown"
+                    >
+                      <h3 className="mx-2 text-gray-700 dark:text-gray-200">
+                        {username}
+                      </h3>
                       <div className="w-8 h-8 overflow-hidden rounded-full">
-                        <img src="/user-placeholder.png" className="object-cover w-full h-full" alt="avatar" />
+                        <img
+                          src="/user-placeholder.png"
+                          className="object-cover w-full h-full"
+                          alt="avatar"
+                        />
                       </div>
                     </Menu.Button>
                   </div>
@@ -76,38 +162,36 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                   >
                     <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="px-1 py-1">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              type="submit"
-                              className={`
-                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
+                        {isPersonalized && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                type="submit"
+                                className={`
+                                ${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                }
                                 'block w-full px-4 py-2 text-left text-sm'
                               `}
-                            >
-                              Your Profile
-                            </button>
-                          )}
-                        </Menu.Item>
+                              >
+                                Your Profile
+                              </button>
+                            )}
+                          </Menu.Item>
+                        )}
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              type="submit"
+                              onClick={doLogout}
+                              type="button"
                               className={`
-                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
-                                'block w-full px-4 py-2 text-left text-sm'
-                              `}
-                            >
-                              Preferences
-                            </button>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              type="submit"
-                              className={`
-                                ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}
+                                ${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                }
                                 'block w-full px-4 py-2 text-left text-sm'
                               `}
                             >
@@ -120,12 +204,12 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                   </Transition>
                 </Menu>
               </div>
-            }
+            )}
           </div>
         </div>
-      </div >
-    </nav >
+      </div>
+    </nav>
   );
-}
+};
 
 export default Navbar;
