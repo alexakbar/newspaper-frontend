@@ -13,3 +13,15 @@ body {
 #root {
   height: 100%;
 }
+
+.react-select__control {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+}
+
+.react-select__control--is-focused {
+  border: 1px solid rgb(96, 165, 250) !important;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px, rgba(147, 197, 253, 0.4) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px !important;
+  outline: 2px solid transparent;
+    outline-offset: 2px;
+}

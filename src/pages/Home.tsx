@@ -34,8 +34,12 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 isMulti
                 name="colors"
                 options={myOptions}
-                className="basic-multi-select"
-                classNamePrefix="select"/>
+                className='react-select'
+                classNamePrefix="react-select"
+                classNames={{
+                  control: (base) => `block mt-2 w-full px-5 py-1`
+                }}
+              />
             </div>
             <div>
               <label htmlFor="source" className="block text-sm text-gray-500 dark:text-gray-300">Source</label>
@@ -43,8 +47,12 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 isMulti
                 name="colors"
                 options={myOptions}
-                className="basic-multi-select"
-                classNamePrefix="select"/>
+                className='react-select'
+                classNamePrefix="react-select"
+                classNames={{
+                  control: (base) => `block mt-2 w-full px-5 py-1`
+                }}
+              />
             </div>
             <div>
               <label htmlFor="date" className="block text-sm text-gray-500 dark:text-gray-300">Date</label>
