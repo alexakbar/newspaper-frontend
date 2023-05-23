@@ -71,7 +71,8 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     if (sessionUser) {
       const userData = JSON.parse(sessionUser);
 
-      if (userData.is_personalized) setPersonalized(true);
+      if (userData.is_personalize) setPersonalized(true);
+      else setPersonalized(false);
     } else {
       window.location.href = "/login";
     }

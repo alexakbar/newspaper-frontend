@@ -22,6 +22,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
     const sessionUser = sessionStorage.getItem("user");
     if (sessionUser) {
       const userData = JSON.parse(sessionUser);
+      console.log(userData);
 
       // get username from user data
       setUsername(userData.username);
@@ -137,7 +138,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                       className="flex items-center focus:outline-none"
                       aria-label="toggle profile dropdown"
                     >
-                      <h3 className="mx-2 text-gray-700 dark:text-gray-200">
+                      <h3 className="mx-2 text-gray-700 dark:text-gray-200 text-base">
                         {username}
                       </h3>
                       <div className="w-8 h-8 overflow-hidden rounded-full">
@@ -161,7 +162,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                   >
                     <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="px-1 py-1">
-                        {isPersonalized && (
+                        {(isPersonalized && isLoggedIn) ?? (
                           <Menu.Item>
                             {({ active }) => (
                               <button

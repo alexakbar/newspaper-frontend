@@ -53,7 +53,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
       .then((res) => {
         const responseBody = res.data.data;
         const token = responseBody.token;
-        const userData = responseBody;
+        const userData = responseBody.data;
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(userData));
         setToken(token);
