@@ -68,6 +68,13 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     options={myOptions}
                     className="react-select"
                     classNamePrefix="react-select"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({
+                        ...base,
+                        zIndex: 20,
+                      }),
+                    }}
                     classNames={{
                       control: (base) => `block mt-2 w-full px-5 py-1`,
                     }}
@@ -87,6 +94,13 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     options={myOptions}
                     className="react-select"
                     classNamePrefix="react-select"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({
+                        ...base,
+                        zIndex: 20,
+                      }),
+                    }}
                     classNames={{
                       control: (base) => `block mt-2 w-full px-5 py-1`,
                     }}
@@ -106,6 +120,13 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     options={myOptions}
                     className="react-select"
                     classNamePrefix="react-select"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({
+                        ...base,
+                        zIndex: 20,
+                      }),
+                    }}
                     classNames={{
                       control: (base) => `block mt-2 w-full px-5 py-1`,
                     }}

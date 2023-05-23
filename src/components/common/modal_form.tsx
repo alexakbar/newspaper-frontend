@@ -88,7 +88,7 @@ const ModalForm: React.FunctionComponent<ModalProps> = (props) => {
                                 styles={{
                                   menuPortal: (base) => ({
                                     ...base,
-                                    zIndex: 9999,
+                                    zIndex: 20,
                                   }),
                                 }}
                                 classNames={{
