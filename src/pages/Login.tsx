@@ -22,7 +22,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
   useEffect(() => {
     // get token from session storage
     const sessionToken = sessionStorage.getItem("token");
-    if (sessionToken !== null) {
+    if (sessionToken) {
       setToken(sessionToken!);
     } else {
       setToken("");
@@ -41,7 +41,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
       .then((res) => {
         const responseBody = res.data.data;
         const token = responseBody.token;
-        const userData = responseBody.data;
+        const userData = responseBody;
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(userData));
         setToken(token);

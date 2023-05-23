@@ -20,7 +20,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   // get token from session storage
   useEffect(() => {
     const sessionToken = sessionStorage.getItem("token");
-    if (sessionToken !== null) {
+    if (sessionToken) {
       setToken(sessionToken!);
     } else {
       setToken("");
@@ -28,7 +28,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
 
     // get user data from session storage
     const sessionUser = sessionStorage.getItem("user");
-    if (sessionUser !== null) {
+    if (sessionUser) {
       const userData = JSON.parse(sessionUser);
 
       if (userData.is_personalized) setPersonalized(true);

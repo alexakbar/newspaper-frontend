@@ -30,7 +30,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
   useEffect(() => {
     // get token from session storage
     const sessionToken = sessionStorage.getItem("token");
-    if (sessionToken !== null) {
+    if (sessionToken) {
       setToken(sessionToken!);
     } else {
       setToken("");
@@ -43,6 +43,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
 
   // do register
   const doRegister = async () => {
+    console.log(API)
     await API.post("/register", {
       username,
       email,

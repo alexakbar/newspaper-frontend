@@ -14,13 +14,13 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
   // get token from session storage
   useEffect(() => {
     const sessionToken = sessionStorage.getItem("token");
-    if (sessionToken !== null) {
+    if (sessionToken) {
       setLoggedIn(true);
     }
 
     // get user data from session storage
     const sessionUser = sessionStorage.getItem("user");
-    if (sessionUser !== null) {
+    if (sessionUser) {
       const userData = JSON.parse(sessionUser);
 
       // get username from user data
@@ -45,13 +45,13 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
       <div className="container px-6 py-4 mx-auto">
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
-            <a href="#">
+            <Link to="/">
               <img
                 className="w-auto h-6 sm:h-7"
                 src="https://merakiui.com/images/full-logo.svg"
                 alt=""
               />
-            </a>
+            </Link>
             {/* Mobile menu button */}
             <div className="flex lg:hidden">
               <button

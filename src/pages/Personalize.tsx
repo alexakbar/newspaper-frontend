@@ -20,9 +20,9 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     // get token from session storage
     const sessionToken = sessionStorage.getItem("token");
 
-    if (sessionToken !== null) {
+    if (sessionToken) {
       const sessionUser = sessionStorage.getItem("user");
-      if (sessionUser !== null) {
+      if (sessionUser) {
         const userData = JSON.parse(sessionUser);
         if (userData.is_personalized) {
           setPersonalized(true);
