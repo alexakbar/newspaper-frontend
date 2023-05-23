@@ -26,7 +26,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
 
       // get username from user data
       setUsername(userData.username);
-      setPersonalized(userData.is_personalized);
+      setPersonalized(userData.is_personalize);
     }
   }, []);
 
