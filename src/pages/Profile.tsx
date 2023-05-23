@@ -1,64 +1,188 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from 'src/components/common';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Navbar } from "src/components/common";
+import { PaperClipIcon } from "@heroicons/react/20/solid";
+import { ModalForm } from "src/components/common";
+import { PaperAirplaneIcon, TagIcon } from "@heroicons/react/24/outline";
 
-interface IProfilePageProps { };
+interface IProfilePageProps {}
 
 const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
+  const [isModalOpen, setModalOpen] = React.useState(false);
+
   useEffect(() => {
-    document.body.classList.add('bg-gray-100')
+    document.body.classList.add("bg-gray-100");
     return () => {
-      document.body.classList.remove('bg-gray-100')
+      document.body.classList.remove("bg-gray-100");
+    };
+  }, []);
+
+  useEffect(() => {
+    const sessionToken = sessionStorage.getItem("token");
+    if (!sessionToken) {
+      window.location.href = "/login";
     }
-  }, [])
+  }, [isModalOpen]);
 
   return (
     <>
       <Navbar />
-      <div className='flex items-center h-5/6'>
-        <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
-          <div className="px-6 py-4">
-            <form className="w-full max-w-md">
-              <div className="flex justify-center mx-auto">
-                <img className="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" />
+      <ModalForm
+        isOpen={isModalOpen}
+        onClose={() => {
+          setModalOpen(false);
+        }}
+        optionData={[
+          { value: "1", label: "Engineering" },
+          { value: "2", label: "Backend" },
+          { value: "3", label: "Frontend" },
+        ]}
+      />
+      <div className="container mx-auto my-10 max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div className="px-4 sm:px-0">
+          <h3 className="text-xl font-bold text-gray-700 dark:text-white">
+            Applicant Information
+          </h3>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Personal details and application.
+          </p>
+        </div>
+        <div className="mt-6 border-t border-gray-100">
+          <dl className="divide-y divide-gray-100">
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Username
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
+                Margot Foster
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Email
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
+                Margot Foster
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Full name
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
+                Margot Foster
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Authors
+              </dt>
+              <dd className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
+                >
+                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                    <div className="flex w-0 flex-1 items-center">
+                      <TagIcon
+                        className="h-5 w-5 flex-shrink-0 text-gray-400"
+                        aria-hidden="true"
+                      />
+                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                        <span className="truncate font-medium dark:text-gray-300">
+                          Engineering, Backend
+                        </span>
+                      </div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0">
+                      <button
+                        onClick={() => {}}
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Category
               </div>
-              <div className="flex items-center justify-center mt-4">
-                <h1 className="text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">Profile</h1>
+              <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
+                >
+                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                    <div className="flex w-0 flex-1 items-center">
+                      <TagIcon
+                        className="h-5 w-5 flex-shrink-0 text-gray-400"
+                        aria-hidden="true"
+                      />
+                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                        <span className="truncate font-medium dark:text-gray-300">
+                          Engineering, Backend
+                        </span>
+                      </div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0 tex-gray-400">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalOpen(true);
+                        }}
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </li>
+                </ul>
               </div>
-              <div className="relative flex items-center mt-8">
-                <span className="absolute">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </span>
-                <input type="email" className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address" />
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
+                Category
               </div>
-              <div className="relative flex items-center mt-4">
-                <span className="absolute">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </span>
-                <input type="password" className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" />
+              <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
+                >
+                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                    <div className="flex w-0 flex-1 items-center">
+                      <TagIcon
+                        className="h-5 w-5 flex-shrink-0 text-gray-400"
+                        aria-hidden="true"
+                      />
+                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                        <span className="truncate font-medium dark:text-gray-300">
+                          Engineering, Backend
+                        </span>
+                      </div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0 tex-gray-400">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalOpen(true);
+                        }}
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </li>
+                </ul>
               </div>
-              <div className="mt-6">
-                <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
-                  Profile
-                </button>
-                <div className="mt-6 text-center ">
-                  <Link to="/register">
-                    <a href="#" className="text-sm text-blue-500 hover:underline dark:text-blue-400">
-                      Don’t have an account yet? Register
-                    </a>
-                  </Link>
-                </div>
-              </div>
-            </form>
-          </div>
+            </div>
+          </dl>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default ProfilePage;
