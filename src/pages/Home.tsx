@@ -4,31 +4,44 @@ import { Navbar } from "src/components/common";
 import Select from "react-select";
 import { Navigate } from "react-router-dom";
 import { DateRangePicker } from "rsuite";
-import CategoryRequest, { GetCategoryResponseData } from "src/requests/CategoryRequest";
-import SourceRequest, { GetSourceResponseData } from "src/requests/SourceRequest";
+import CategoryRequest, {
+  GetCategoryResponseData,
+} from "src/requests/CategoryRequest";
+import SourceRequest, {
+  GetSourceResponseData,
+} from "src/requests/SourceRequest";
 import NewsRequest, { SearchNewsResponseData } from "src/requests/NewsRequest";
+import { log } from "console";
 
-interface IHomePageProps { }
+interface IHomePageProps {}
 
 const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   const [isPersonalized, setPersonalized] = React.useState(true);
   const [token, setToken] = React.useState("");
 
   // filter data
-  const [categories, setCategories] = React.useState<GetCategoryResponseData[] | []>([]);
-  const [sources, setSources] = React.useState<GetSourceResponseData[] | []>([]);
+  const [categories, setCategories] = React.useState<
+    GetCategoryResponseData[] | []
+  >([]);
+  const [sources, setSources] = React.useState<GetSourceResponseData[] | []>(
+    []
+  );
   const [optionsCategories, setOptionsCategories] = React.useState<any[]>([]);
   const [optionsSources, setOptionsSources] = React.useState<any[]>([]);
 
   // filter value
   const [filterSearch, setFilterSearch] = React.useState("");
-  const [filterCategory, setFilterCategory] = React.useState<any[] | null>(null);
+  const [filterCategory, setFilterCategory] = React.useState<any[] | null>(
+    null
+  );
   const [filterSource, setFilterSource] = React.useState<any[] | null>(null);
   const [filterStartDate, setFilterStartDate] = React.useState("");
   const [filterEndDate, setFilterEndDate] = React.useState("");
 
   // news data
-  const [listNews, setListNews] = React.useState<SearchNewsResponseData[] | []>([]);
+  const [listNews, setListNews] = React.useState<SearchNewsResponseData[] | []>(
+    []
+  );
 
   const getNews = async () => {
     const getNewsFromApi = await NewsRequest.searchNews({
@@ -37,10 +50,11 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
       end_date: filterEndDate,
       sources: filterSource,
       q: filterSearch,
-    })
+    });
 
+    // console.log(getNewsFromApi);
     setListNews(getNewsFromApi.data);
-  }
+  };
 
   // get token from session storage
   useEffect(() => {
@@ -49,7 +63,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
       setToken(sessionToken!);
     } else {
       setToken("");
-      window.location.href = "/login"
+      window.location.href = "/login";
     }
 
     // get user data from session storage
@@ -59,7 +73,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
 
       if (userData.is_personalized) setPersonalized(true);
     } else {
-      window.location.href = "/login"
+      window.location.href = "/login";
     }
 
     if (!isPersonalized && token) {
@@ -69,23 +83,23 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
 
   useEffect(() => {
     const loadCategories = async () => {
-      const response = await CategoryRequest.getCategories()
+      const response = await CategoryRequest.getCategories();
       if (response.data) {
-        setCategories(response.data)
+        setCategories(response.data);
       }
-    }
+    };
 
     const loadSources = async () => {
-      const response = await SourceRequest.getSources()
+      const response = await SourceRequest.getSources();
       if (response.data) {
-        setSources(response.data)
+        setSources(response.data);
       }
-    }
+    };
 
     loadCategories();
     loadSources();
     getNews();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (categories) {
@@ -93,11 +107,11 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
         return {
           value: e.id.toString(),
           label: e.name,
-        }
-      })
+        };
+      });
       setOptionsCategories(data);
     }
-  }, [categories])
+  }, [categories]);
 
   useEffect(() => {
     if (sources) {
@@ -105,15 +119,21 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
         return {
           value: e.id.toString(),
           label: e.name,
-        }
-      })
+        };
+      });
       setOptionsSources(data);
     }
-  }, [sources])
+  }, [sources]);
 
   useEffect(() => {
-    getNews()
-  }, [filterSearch, filterCategory, filterSource, filterStartDate, filterEndDate])
+    getNews();
+  }, [
+    filterSearch,
+    filterCategory,
+    filterSource,
+    filterStartDate,
+    filterEndDate,
+  ]);
 
   return (
     <>
@@ -140,7 +160,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 type="text"
                 placeholder="Search here..."
                 onChange={(e) => {
-                  setFilterSearch(e.target.value)
+                  setFilterSearch(e.target.value);
                 }}
                 className="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
               />
@@ -157,7 +177,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 name="colors"
                 options={optionsCategories}
                 onChange={(selected) => {
-                  setFilterCategory(selected.map(e => e.value))
+                  setFilterCategory(selected.map((e) => e.label));
                 }}
                 className="react-select"
                 classNamePrefix="react-select"
@@ -178,7 +198,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 name="colors"
                 options={optionsSources}
                 onChange={(selected) => {
-                  setFilterSource(selected.map(e => e.value))
+                  setFilterSource(selected.map((e) => e.value));
                 }}
                 className="react-select"
                 classNamePrefix="react-select"
@@ -196,8 +216,8 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
               </label>
               <DateRangePicker
                 onChange={(val) => {
-                  setFilterStartDate(val?.[0].toISOString() || '')
-                  setFilterEndDate(val?.[1].toISOString() || '')
+                  setFilterStartDate(val?.[0].toISOString() || "");
+                  setFilterEndDate(val?.[1].toISOString() || "");
                 }}
                 placeholder="Select date..."
                 size="lg"
@@ -212,13 +232,13 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                   <div className="relative">
                     <img
                       className="object-cover object-center w-full h-64 rounded-lg lg:h-80"
-                      src={news.image}
+                      src={news.image ?? "https://dummyimage.com/720x400"}
                       alt=""
                     />
                     <div className="absolute bottom-0 flex p-3 bg-white dark:bg-gray-900 ">
                       <div className="mx-4">
                         <h1 className="text-sm text-gray-700 dark:text-gray-200">
-                          {news.author || 'Anonymous'}
+                          {news.author || "Anonymous"}
                         </h1>
                       </div>
                     </div>
@@ -228,7 +248,10 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                   </h1>
                   <hr className="w-32 my-6 text-blue-500" />
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {news.description.slice(0, 150) + (news.description.length > 150 ? "..." : "")}
+                    {news.description
+                      ? news.description +
+                        (news.description.length > 150 ? "..." : "")
+                      : "No description"}
                   </p>
                   <a
                     href="#"
@@ -237,7 +260,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                     Read more
                   </a>
                 </div>
-              )
+              );
             })}
           </div>
         </div>

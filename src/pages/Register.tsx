@@ -43,7 +43,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
 
   // do register
   const doRegister = async () => {
-    console.log(API)
+    console.log(API);
     await API.post("/register", {
       username,
       email,
@@ -53,7 +53,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
       .then((res) => {
         const responseBody = res.data.data;
         const token = responseBody.token;
-        const userData = responseBody.user;
+        const userData = responseBody;
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(userData));
         setToken(token);
