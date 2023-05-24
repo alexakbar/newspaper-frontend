@@ -16,7 +16,7 @@ import { log } from "console";
 interface IHomePageProps {}
 
 const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
-  const [isPersonalized, setPersonalized] = React.useState(true);
+  const [isPersonalized, setPersonalized] = React.useState(false);
   const [token, setToken] = React.useState("");
 
   // filter data
@@ -77,9 +77,11 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
       window.location.href = "/login";
     }
 
-    if (!isPersonalized && token) {
-      window.location.href = "/personalize";
-    }
+    setTimeout(() => {
+      if (!isPersonalized && token) {
+        window.location.href = "/personalize";
+      }
+    }, 1000);
   }, [isPersonalized, token]);
 
   useEffect(() => {
