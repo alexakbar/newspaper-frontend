@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Navbar } from "src/components/common";
-import { PaperClipIcon } from "@heroicons/react/20/solid";
 import { ModalForm } from "src/components/common";
-import { PaperAirplaneIcon, TagIcon } from "@heroicons/react/24/outline";
+import { TagIcon } from "@heroicons/react/24/outline";
+import ProfileRequest, { getProfile } from "src/requests/ProfileRequest";
 
 interface IProfilePageProps {}
 
 const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   const [isModalOpen, setModalOpen] = React.useState(false);
+  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   useEffect(() => {
     document.body.classList.add("bg-gray-100");
@@ -23,6 +24,16 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       window.location.href = "/login";
     }
   }, [isModalOpen]);
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    const getProfileFromApi = await ProfileRequest.getProfile();
+    setUsername(getProfileFromApi.data.username);
+    setEmail(getProfileFromApi.data.email);
+  };
 
   return (
     <>
@@ -41,10 +52,10 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       <div className="container mx-auto my-10 max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <div className="px-4 sm:px-0">
           <h3 className="text-xl font-bold text-gray-700 dark:text-white">
-            Applicant Information
+            My Profile
           </h3>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Personal details and application.
+            Personal details.
           </p>
         </div>
         <div className="mt-6 border-t border-gray-100">
@@ -54,7 +65,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                 Username
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
-                Margot Foster
+                {username}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -62,20 +73,12 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                 Email
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
-                Margot Foster
+                {email}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Full name
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
-                Margot Foster
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Authors
+                Preferred sources
               </dt>
               <dd className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
                 <ul
@@ -90,13 +93,15 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          Engineering, Backend
+                          No sources selected
                         </span>
                       </div>
                     </div>
                     <div className="ml-4 flex-shrink-0">
                       <button
-                        onClick={() => {}}
+                        onClick={() => {
+                          setModalOpen(true);
+                        }}
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
                         Update
@@ -108,7 +113,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Category
+                Authors
               </div>
               <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
                 <ul
@@ -123,7 +128,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          Engineering, Backend
+                          No sources selected
                         </span>
                       </div>
                     </div>
@@ -144,7 +149,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Category
+                Categories
               </div>
               <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
                 <ul
@@ -159,7 +164,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          Engineering, Backend
+                          No sources selected
                         </span>
                       </div>
                     </div>

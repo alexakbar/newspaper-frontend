@@ -26,7 +26,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
 
       // get username from user data
       setUsername(userData.username);
-      setPersonalized(userData.is_personalize);
+      setPersonalized(userData.is_personalized);
     }
   }, []);
 
@@ -126,12 +126,6 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
             </div>
             {isLoggedIn && (
               <div className="flex items-center mt-4 lg:mt-0">
-                {/* <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
-                  <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" className="object-cover w-full h-full" alt="avatar" />
-                  </div>
-                  <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Khatab wedaa</h3>
-                </button> */}
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
                     <Menu.Button
@@ -162,12 +156,13 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                   >
                     <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="px-1 py-1">
-                        {(isPersonalized && isLoggedIn) ?? (
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                type="submit"
-                                className={`
+                        {isPersonalized && isLoggedIn && (
+                          <Link to="/profile">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  type="submit"
+                                  className={`
                                 ${
                                   active
                                     ? "bg-gray-100 text-gray-900"
@@ -175,11 +170,12 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                                 }
                                 'block w-full px-4 py-2 text-left text-sm'
                               `}
-                              >
-                                Your Profile
-                              </button>
-                            )}
-                          </Menu.Item>
+                                >
+                                  Your Profile
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </Link>
                         )}
                         <Menu.Item>
                           {({ active }) => (

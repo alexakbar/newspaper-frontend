@@ -2,14 +2,14 @@ import { AxiosRequestConfig } from "axios";
 import { ApiResponse, apiRequest } from "./ApiRequest";
 
 export type GetSourceResponseData = {
-  id: string,
-  name: string,
-}
+  id: string;
+  name: string;
+};
 
 const getSources = async (): Promise<ApiResponse<GetSourceResponseData>> => {
   const config: AxiosRequestConfig = {
-    method: 'GET',
-    url: '/sources',
+    method: "GET",
+    url: "/sources",
   };
   return await apiRequest<GetSourceResponseData>(config);
 };
