@@ -190,7 +190,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select category here..."
                     onChange={(selected) => {
-                      setCategory(selected.map((e) => e.label));
+                      setCategory(selected.map((e) => e.value));
                     }}
                   />
                 </div>
@@ -219,7 +219,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select source here..."
                     onChange={(selected) => {
-                      setSource(selected.map((e) => e.label))
+                      setSource(selected.map((e) => e.value))
                     }}
                   />
                 </div>
@@ -248,7 +248,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select authors here..."
                     onChange={(selected) => {
-                      setAuthor(selected.map((e) => e.label))
+                      setAuthor(selected.map((e) => e.value))
                     }}
                   />
                 </div>

@@ -180,7 +180,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 name="colors"
                 options={optionsCategories}
                 onChange={(selected) => {
-                  setFilterCategory(selected.map((e) => e.label));
+                  setFilterCategory(selected.map((e) => e.value));
                 }}
                 className="react-select"
                 classNamePrefix="react-select"

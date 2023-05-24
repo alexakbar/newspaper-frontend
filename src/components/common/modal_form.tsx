@@ -1,18 +1,28 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import Select from "react-select";
+import Select, { PropsValue } from "react-select";
 import React from "react";
+
+export type ModalOnSave = (selectedValue?: ModalSelectionData[]) => void;
+
+export interface ModalSelectionData {
+  value: string;
+  label: string;
+}
 
 // create model
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   optionData?: any[];
+  onSave: ModalOnSave;
+  selectDefaultValue: PropsValue<any>[] | null;
 }
 
 const ModalForm: React.FunctionComponent<ModalProps> = (props) => {
   const [open, setOpen] = useState(false);
   const [optionsData, setOptionsData] = React.useState<any[]>([]);
+  const [selectedData, setSelectedData] = React.useState<ModalSelectionData[] | []>([])
 
   const cancelButtonRef = useRef(null);
 
@@ -26,6 +36,11 @@ const ModalForm: React.FunctionComponent<ModalProps> = (props) => {
     setOpen(false);
     props.onClose();
   };
+
+  const onSave = () => {
+    setOpen(false);
+    props.onSave(selectedData);
+  }
 
   return (
     <>
@@ -81,10 +96,13 @@ const ModalForm: React.FunctionComponent<ModalProps> = (props) => {
                                 isMulti
                                 name="colors"
                                 options={optionsData}
-                                onChange={(selected) => {}}
+                                onChange={(selected) => {
+                                  setSelectedData(selected as ModalSelectionData[])
+                                }}
                                 className="react-select"
                                 classNamePrefix="react-select"
                                 menuPortalTarget={document.body}
+                                defaultValue={props.selectDefaultValue}
                                 styles={{
                                   menuPortal: (base) => ({
                                     ...base,
@@ -104,7 +122,7 @@ const ModalForm: React.FunctionComponent<ModalProps> = (props) => {
                         <button
                           type="button"
                           className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                          onClick={() => onClose()}
+                          onClick={() => onSave()}
                         >
                           Save
                         </button>
