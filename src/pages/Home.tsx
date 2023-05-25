@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Navbar } from "src/components/common";
+import { Navbar, SkeletonCard } from "src/components/common";
 import Select from "react-select";
 import CategoryRequest, {
   GetCategoryResponseData,
@@ -17,6 +17,7 @@ interface IHomePageProps {}
 
 const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   const [isPersonalized, setPersonalized] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(true);
   const [token, setToken] = React.useState("");
 
   // filter data
@@ -61,6 +62,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     });
 
     setListNews(getNewsFromApi.data);
+    setLoading(false);
   };
 
   // get token from session storage
@@ -279,6 +281,13 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                   </div>
                 );
               })}
+            </div>
+          ) : // is loading
+          isLoading ? (
+            <div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2 xl:grid-cols-3">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
             </div>
           ) : (
             <EmptyState />
