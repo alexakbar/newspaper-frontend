@@ -19,6 +19,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
   const [password, setPassword] = React.useState("");
   const [c_password, setCPassword] = React.useState("");
   const [token, setToken] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     document.body.classList.add("bg-gray-100");
@@ -52,8 +53,22 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
     }
   }, [token]);
 
+  // set loading
+  useEffect(() => {
+    if (loading) {
+      document.getElementById("register-button")!.innerHTML = "Loading...";
+      document
+        .getElementById("register-button")!
+        .setAttribute("disabled", "true");
+    } else {
+      document.getElementById("register-button")!.innerHTML = "Register";
+      document.getElementById("register-button")!.removeAttribute("disabled");
+    }
+  }, [loading]);
+
   // do register
   const doRegister = async () => {
+    setLoading(true);
     await RegisterRequest.doRegister({
       username,
       email,
@@ -67,6 +82,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(userData));
         setToken(token);
+        setLoading(false);
       })
       .catch((reason: AxiosError<DefaultResponseAPI>) => {
         const errorResponse = reason.response?.data;
@@ -76,6 +92,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
             toast.error(`${value}`);
           }
         }
+        setLoading(false);
       });
   };
 
@@ -204,10 +221,11 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
               </div>
               <div className="mt-6">
                 <button
+                  id="register-button"
                   type="button"
                   disabled={isDisabled}
                   onClick={doRegister}
-                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  className="disabled:opacity-25 w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                 >
                   Register
                 </button>

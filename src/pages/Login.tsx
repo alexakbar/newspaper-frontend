@@ -17,6 +17,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // get token from session storage
@@ -43,8 +44,21 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
     }
   }, [token]);
 
+  // set loading
+  useEffect(() => {
+    if (loading) {
+      document.getElementById("login-button")!.innerHTML = "Loading...";
+      document.getElementById("login-button")!.setAttribute("disabled", "true");
+    } else {
+      document.getElementById("login-button")!.innerHTML = "Login";
+      document.getElementById("login-button")!.removeAttribute("disabled");
+    }
+  }, [loading]);
+
   // login function
   const doLogin = async () => {
+    // change text of button to loading and disabled it
+    setLoading(true);
     await LoginRequest.doLogin({
       email,
       password,
@@ -56,9 +70,12 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(userData));
         setToken(token);
+        document.getElementById("login-button")!.innerHTML = "Login";
+        setLoading(false);
       })
       .catch((reason: AxiosError<DefaultResponseAPI>) => {
         toast.error(reason.response?.data.message);
+        setLoading(false);
       });
   };
 
@@ -137,10 +154,11 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
               </div>
               <div className="mt-6">
                 <button
+                  id="login-button"
                   onClick={doLogin}
                   disabled={isDisabled}
                   type="button"
-                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  className="disabled:opacity-25 w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                 >
                   Login
                 </button>

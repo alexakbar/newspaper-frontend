@@ -28,8 +28,7 @@ const FormMultiSelect: React.FunctionComponent<FormMultiSelectProps> = (
               />
               <div className="ml-4 flex min-w-0 flex-1 gap-2">
                 <span className="truncate font-medium dark:text-gray-300">
-                  {props.data?.map((e) => e.label).join(", ") ??
-                    "No Selected Source"}
+                  {props.data?.map((e) => e.label).join(", ") ?? "No Selected"}
                 </span>
               </div>
             </div>

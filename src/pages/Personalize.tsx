@@ -18,6 +18,7 @@ interface IPersonalizePageProps {}
 const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
   props
 ) => {
+  const [loading, setLoading] = React.useState(false);
   const [isPersonalized, setPersonalized] = React.useState(false);
   const [token, setToken] = React.useState("");
 
@@ -135,8 +136,24 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
 
   const isDisabled = !category && !source && !author;
 
+  // set loading
+  useEffect(() => {
+    if (loading) {
+      document.getElementById("personalize-button")!.innerHTML = "Loading...";
+      document
+        .getElementById("personalize-button")!
+        .setAttribute("disabled", "true");
+    } else {
+      document.getElementById("personalize-button")!.innerHTML = "Submit";
+      document
+        .getElementById("personalize-button")!
+        .removeAttribute("disabled");
+    }
+  }, [loading]);
+
   // save preferences
   const doSave = async () => {
+    setLoading(true);
     const response = await SetPersonalizeRequest.setPersonalized({
       authors: author,
       categories: category,
@@ -150,6 +167,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     } else {
       toast.error(response.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -255,10 +273,11 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
               </div>
               <div className="mt-6">
                 <button
+                  id="personalize-button"
                   onClick={doSave}
                   disabled={isDisabled}
                   type="button"
-                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  className="disabled:opacity-25 w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                 >
                   Submit
                 </button>
