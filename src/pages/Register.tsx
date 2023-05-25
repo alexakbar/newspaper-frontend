@@ -37,7 +37,18 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
     }
 
     if (token !== "") {
-      window.location.href = "/";
+      // get user data from session storage
+      const sessionUser = sessionStorage.getItem("user");
+      if (sessionUser) {
+        const userData = JSON.parse(sessionUser!);
+        if (!userData.is_personalized) {
+          window.location.href = "/personalize";
+        } else {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/";
+      }
     }
   }, [token]);
 

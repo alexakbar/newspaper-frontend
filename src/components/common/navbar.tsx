@@ -1,5 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Menu, Transition } from "@headlessui/react";
+import {
+  HomeModernIcon,
+  NewspaperIcon,
+  PaperAirplaneIcon,
+  PaperClipIcon,
+} from "@heroicons/react/24/outline";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -47,11 +53,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
             <Link to="/">
-              <img
-                className="w-auto h-6 sm:h-7"
-                src="https://merakiui.com/images/full-logo.svg"
-                alt=""
-              />
+              <NewspaperIcon className="w-8 h-8 text-gray-800 dark:text-white" />
             </Link>
             {/* Mobile menu button */}
             <div className="flex lg:hidden">
@@ -107,7 +109,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
             } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
           >
             <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-0">
-              {(isPersonalized || !isLoggedIn) && (
+              {isPersonalized && isLoggedIn && (
                 <Link
                   to="/"
                   className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -123,8 +125,24 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
                   Login
                 </Link>
               )}
+              {isMobileToggleOpen && isLoggedIn && (
+                <Link
+                  to="/profile"
+                  className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Profile
+                </Link>
+              )}
+              {isMobileToggleOpen && isLoggedIn && (
+                <div
+                  onClick={doLogout}
+                  className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Sign Out
+                </div>
+              )}
             </div>
-            {isLoggedIn && (
+            {isLoggedIn && !isMobileToggleOpen && (
               <div className="flex items-center mt-4 lg:mt-0">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>

@@ -3,10 +3,19 @@ import { Navbar } from "src/components/common";
 import { ModalForm } from "src/components/common";
 import { TagIcon } from "@heroicons/react/24/outline";
 import ProfileRequest, { getProfile } from "src/requests/ProfileRequest";
-import CategoryRequest, { GetCategoryResponseData } from "src/requests/CategoryRequest";
-import SourceRequest, { GetSourceResponseData } from "src/requests/SourceRequest";
-import AuthorRequest, { GetAuthorResponseData } from "src/requests/AuthorRequest";
-import { ModalOnSave, ModalSelectionData } from "src/components/common/modal_form";
+import CategoryRequest, {
+  GetCategoryResponseData,
+} from "src/requests/CategoryRequest";
+import SourceRequest, {
+  GetSourceResponseData,
+} from "src/requests/SourceRequest";
+import AuthorRequest, {
+  GetAuthorResponseData,
+} from "src/requests/AuthorRequest";
+import {
+  ModalOnSave,
+  ModalSelectionData,
+} from "src/components/common/modal_form";
 import { PropsValue } from "react-select";
 import api from "src/api";
 import { AxiosError } from "axios";
@@ -21,21 +30,29 @@ interface DefaultResponseAPI {
 }
 
 interface IPreferencesData {
-  sources: string[] | null,
-  categories: string[] | null,
-  authors: string[] | null,
+  sources: string[] | null;
+  categories: string[] | null;
+  authors: string[] | null;
 }
 
 const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   const [token, setToken] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [preferences, setPreferences] = React.useState<IPreferencesData>({sources: null, categories: null, authors: null})
+  const [preferences, setPreferences] = React.useState<IPreferencesData>({
+    sources: null,
+    categories: null,
+    authors: null,
+  });
 
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [modalOptionData, setModalOptionData] = React.useState<any[] | []>([]);
-  const [modalCallback, setModalCallback] = React.useState<ModalOnSave>(() => {});
-  const [modalDefaultValue, setModalDefaultValue] = React.useState<PropsValue<any>[] | null>(null)
+  const [modalCallback, setModalCallback] = React.useState<ModalOnSave>(
+    () => {}
+  );
+  const [modalDefaultValue, setModalDefaultValue] = React.useState<
+    PropsValue<any>[] | null
+  >(null);
 
   // Option Data
   const [categories, setCategories] = React.useState<
@@ -52,7 +69,9 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   const [optionsAuthors, setOptionsAuthors] = React.useState<any[]>([]);
 
   // Data
-  const [category, setCategory] = React.useState<PropsValue<any>[] | null>(null);
+  const [category, setCategory] = React.useState<PropsValue<any>[] | null>(
+    null
+  );
   const [source, setSource] = React.useState<PropsValue<any>[] | null>(null);
   const [author, setAuthor] = React.useState<PropsValue<any>[] | null>(null);
 
@@ -113,7 +132,9 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       });
       setOptionsCategories(data);
       // set default category)
-      setCategory(data.filter(val => preferences.categories?.includes(val.value)))
+      setCategory(
+        data.filter((val) => preferences.categories?.includes(val.value))
+      );
     }
   }, [categories]);
 
@@ -127,7 +148,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       });
       setOptionsSources(data);
       // set default source
-      setSource(data.filter(val => preferences.sources?.includes(val.value)))
+      setSource(data.filter((val) => preferences.sources?.includes(val.value)));
     }
   }, [sources]);
 
@@ -141,7 +162,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       });
       setOptionsAuthors(data);
       // set default author
-      setAuthor(data.filter(val => preferences.authors?.includes(val.value)))
+      setAuthor(data.filter((val) => preferences.authors?.includes(val.value)));
     }
   }, [authors]);
 
@@ -153,15 +174,16 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       sources: JSON.parse(getProfileFromApi.data.preferred_sources),
       authors: JSON.parse(getProfileFromApi.data.authors),
       categories: JSON.parse(getProfileFromApi.data.categories),
-    })
+    });
   };
 
   const doSave = async (postData: any) => {
-    await api.post("/set-personalize", postData, {
-      headers: {
-        'Authorization' : 'Bearer ' + token
-      }
-    })
+    await api
+      .post("/set-personalize", postData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         const responseBody = res.data.data;
         const userData = responseBody;
@@ -228,24 +250,26 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          No sources selected
+                          {source?.map((e) => e.label).join(", ")}
                         </span>
                       </div>
                     </div>
                     <div className="ml-4 flex-shrink-0">
                       <button
                         onClick={() => {
-                          setModalOptionData(optionsSources)
+                          setModalOptionData(optionsSources);
                           setModalCallback(() => {
                             return (selectedValue: ModalSelectionData[]) => {
                               doSave({
-                                preferred_sources: selectedValue.map(e => e.value),
+                                preferred_sources: selectedValue.map(
+                                  (e) => e.value
+                                ),
                               });
-                              setSource(selectedValue)
-                              setModalOpen(false)
-                            }
-                          })
-                          setModalDefaultValue(source)
+                              setSource(selectedValue);
+                              setModalOpen(false);
+                            };
+                          });
+                          setModalDefaultValue(source);
                           setModalOpen(true);
                         }}
                         className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -274,7 +298,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          No sources selected
+                          {author?.map((e) => e.label).join(", ")}
                         </span>
                       </div>
                     </div>
@@ -282,17 +306,17 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       <button
                         type="button"
                         onClick={() => {
-                          setModalOptionData(optionsAuthors)
+                          setModalOptionData(optionsAuthors);
                           setModalCallback(() => {
                             return (selectedValue: ModalSelectionData[]) => {
                               doSave({
-                                authors: selectedValue.map(e => e.value),
+                                authors: selectedValue.map((e) => e.value),
                               });
-                              setAuthor(selectedValue)
-                              setModalOpen(false)
-                            }
-                          })
-                          setModalDefaultValue(author)
+                              setAuthor(selectedValue);
+                              setModalOpen(false);
+                            };
+                          });
+                          setModalDefaultValue(author);
                           setModalOpen(true);
                         }}
                         className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -321,7 +345,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       />
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium dark:text-gray-300">
-                          No sources selected
+                          {category?.map((e) => e.label).join(", ")}
                         </span>
                       </div>
                     </div>
@@ -329,17 +353,17 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
                       <button
                         type="button"
                         onClick={() => {
-                          setModalOptionData(optionsCategories)
+                          setModalOptionData(optionsCategories);
                           setModalCallback(() => {
                             return (selectedValue: ModalSelectionData[]) => {
                               doSave({
-                                categories: selectedValue.map(e => e.value),
+                                categories: selectedValue.map((e) => e.value),
                               });
-                              setCategory(selectedValue)
-                              setModalOpen(false)
-                            }
-                          })
-                          setModalDefaultValue(category)
+                              setCategory(selectedValue);
+                              setModalOpen(false);
+                            };
+                          });
+                          setModalDefaultValue(category);
                           setModalOpen(true);
                         }}
                         className="font-medium text-indigo-600 hover:text-indigo-500"

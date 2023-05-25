@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Navbar } from "src/components/common";
 import Select from "react-select";
 import { Navigate } from "react-router-dom";
-import { DateRangePicker } from "rsuite";
 import CategoryRequest, {
   GetCategoryResponseData,
 } from "src/requests/CategoryRequest";
@@ -12,6 +11,9 @@ import SourceRequest, {
 } from "src/requests/SourceRequest";
 import NewsRequest, { SearchNewsResponseData } from "src/requests/NewsRequest";
 import { log } from "console";
+import Datepicker from "react-tailwindcss-datepicker";
+// empty state
+import { EmptyState } from "src/components/common";
 
 interface IHomePageProps {}
 
@@ -35,8 +37,14 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     null
   );
   const [filterSource, setFilterSource] = React.useState<any[] | null>(null);
-  const [filterStartDate, setFilterStartDate] = React.useState("");
-  const [filterEndDate, setFilterEndDate] = React.useState("");
+  const [dateRange, setDateRange] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  const handleValueChange = (newValue: any) => {
+    setDateRange(newValue);
+  };
 
   // news data
   const [listNews, setListNews] = React.useState<SearchNewsResponseData[] | []>(
@@ -46,8 +54,8 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   const getNews = async () => {
     const getNewsFromApi = await NewsRequest.searchNews({
       categories: filterCategory,
-      start_date: filterStartDate,
-      end_date: filterEndDate,
+      start_date: dateRange.startDate,
+      end_date: dateRange.endDate,
       sources: filterSource,
       q: filterSearch,
     });
@@ -134,8 +142,8 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     filterSearch,
     filterCategory,
     filterSource,
-    filterStartDate,
-    filterEndDate,
+    dateRange.startDate,
+    dateRange.endDate,
   ]);
 
   return (
@@ -165,7 +173,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 onChange={(e) => {
                   setFilterSearch(e.target.value);
                 }}
-                className="block  mt-2 w-full placeholder-gray-700/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-300"
+                className="block  mt-2 w-full placeholder-gray-700/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:text-gray-700 dark:focus:border-blue-300"
               />
             </div>
             <div>
@@ -213,59 +221,69 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
             <div>
               <label
                 htmlFor="date"
-                className="block text-sm text-gray-500 dark:text-gray-300"
+                className="block text-sm text-gray-500 dark:text-gray-300 mb-2"
               >
                 Filter by date
               </label>
-              <DateRangePicker
-                onChange={(val) => {
-                  setFilterStartDate(val?.[0].toISOString() || "");
-                  setFilterEndDate(val?.[1].toISOString() || "");
+              <Datepicker
+                classNames={{
+                  input: (base) =>
+                    `relative transition-all duration-300 py-2.5 pl-4 pr-14 w-full border-gray-300 dark:bg-white dark:text-gray-700 dark:border-slate-600 rounded-lg tracking-wide font-light text-sm placeholder-gray-400 bg-white focus:ring disabled:opacity-40 disabled:cursor-not-allowed focus:border-blue-500 focus:ring-blue-500/20`,
                 }}
-                placeholder="Select date..."
-                size="lg"
-                className={"block  mt-2 w-full"}
+                value={dateRange}
+                onChange={(date) => {
+                  handleValueChange(date);
+                }}
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2 xl:grid-cols-3">
-            {listNews.map((news) => {
-              return (
-                <div>
-                  <div className="relative">
-                    <img
-                      className="object-cover object-center w-full h-64 rounded-lg lg:h-80"
-                      src={news.image ?? "https://dummyimage.com/720x400"}
-                      alt=""
-                    />
-                    <div className="absolute bottom-0 flex p-3 bg-white dark:bg-gray-900 ">
-                      <div className="mx-4">
-                        <h1 className="text-sm text-gray-700 dark:text-gray-200">
-                          {news.author || "Anonymous"}
-                        </h1>
+          {listNews.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2 xl:grid-cols-3">
+              {listNews.map((news) => {
+                return (
+                  <div>
+                    <div className="relative">
+                      <img
+                        className="object-cover object-center w-full h-64 rounded-lg lg:h-80"
+                        src={
+                          news.image ??
+                          process.env.PUBLIC_URL +
+                            "/placeholder/dummy-image.png"
+                        }
+                        alt=""
+                      />
+                      <div className="absolute bottom-0 flex p-3 bg-white dark:bg-gray-900 ">
+                        <div className="mx-4">
+                          <h1 className="text-sm text-gray-700 dark:text-gray-200">
+                            {news.author || "Anonymous"}
+                          </h1>
+                        </div>
                       </div>
                     </div>
+                    <h1 className="mt-6 text-xl font-semibold text-gray-800 dark:text-white">
+                      {news.title}
+                    </h1>
+                    <hr className="w-32 my-6 text-blue-500" />
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {news.description
+                        ? news.description +
+                          (news.description.length > 150 ? "..." : "")
+                        : "No description"}
+                    </p>
+                    <a
+                      href={news.url}
+                      target="_blank"
+                      className="inline-block mt-4 text-blue-500 underline hover:text-blue-400"
+                    >
+                      Read more
+                    </a>
                   </div>
-                  <h1 className="mt-6 text-xl font-semibold text-gray-800 dark:text-white">
-                    {news.title}
-                  </h1>
-                  <hr className="w-32 my-6 text-blue-500" />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {news.description
-                      ? news.description +
-                        (news.description.length > 150 ? "..." : "")
-                      : "No description"}
-                  </p>
-                  <a
-                    href="#"
-                    className="inline-block mt-4 text-blue-500 underline hover:text-blue-400"
-                  >
-                    Read more
-                  </a>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState />
+          )}
         </div>
       </section>
     </>
