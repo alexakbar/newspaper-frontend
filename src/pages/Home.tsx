@@ -288,6 +288,9 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
             </div>
           ) : (
             <EmptyState />
