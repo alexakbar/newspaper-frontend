@@ -11,7 +11,7 @@ Run Docker Compose
 ```bash
   make setup
 ```
-## Access Laravel on Docker
+## Access React on Docker
 
 The project running on docker with port :3000
 
