@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "src/components/common";
-import API from "../api";
-import { log } from "console";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import ProfileRequest from "src/requests/ProfileRequest";
 import LoginRequest from "src/requests/LoginRequest";
 
 interface ILoginPageProps {}
@@ -46,6 +43,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
     }
   }, [token]);
 
+  // login function
   const doLogin = async () => {
     await LoginRequest.doLogin({
       email,
@@ -147,13 +145,11 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
                   Login
                 </button>
                 <div className="mt-6 text-center ">
-                  <Link to="/register">
-                    <a
-                      href="#"
-                      className="text-sm text-blue-500 hover:underline dark:text-blue-400"
-                    >
-                      Don’t have an account yet? Register
-                    </a>
+                  <Link
+                    to="/register"
+                    className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+                  >
+                    Don’t have an account yet? Register
                   </Link>
                 </div>
               </div>

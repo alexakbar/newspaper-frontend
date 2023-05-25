@@ -1,7 +1,6 @@
 import { Navbar } from "src/components/common";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import API from "../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import RegisterRequest from "src/requests/Register";
@@ -213,13 +212,11 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
                   Register
                 </button>
                 <div className="mt-6 text-center ">
-                  <Link to="/login">
-                    <a
-                      href="#"
-                      className="text-sm text-blue-500 hover:underline dark:text-blue-400"
-                    >
-                      Already have an account?
-                    </a>
+                  <Link
+                    to="/login"
+                    className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+                  >
+                    Already have an account?
                   </Link>
                 </div>
               </div>

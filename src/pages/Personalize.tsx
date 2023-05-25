@@ -10,19 +10,10 @@ import CategoryRequest, {
 import AuthorRequest, {
   GetAuthorResponseData,
 } from "src/requests/AuthorRequest";
-import api from "src/api";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import ProfileRequest from "src/requests/ProfileRequest";
 import SetPersonalizeRequest from "src/requests/PersonalizeRequest";
 
 interface IPersonalizePageProps {}
-
-interface DefaultResponseAPI {
-  data: Array<any>;
-  message: string;
-  status: string;
-}
 
 const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
   props
@@ -30,7 +21,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
   const [isPersonalized, setPersonalized] = React.useState(false);
   const [token, setToken] = React.useState("");
 
-  // Option Data
+  // References to the select components
   const [categories, setCategories] = React.useState<
     GetCategoryResponseData[] | []
   >([]);
@@ -40,11 +31,12 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
   const [authors, setAuthors] = React.useState<GetAuthorResponseData[] | []>(
     []
   );
+  // Option Data
   const [optionsCategories, setOptionsCategories] = React.useState<any[]>([]);
   const [optionsSources, setOptionsSources] = React.useState<any[]>([]);
   const [optionsAuthors, setOptionsAuthors] = React.useState<any[]>([]);
 
-  // Data
+  // Selected values
   const [category, setCategory] = React.useState<any[] | null>(null);
   const [source, setSource] = React.useState<any[] | null>(null);
   const [author, setAuthor] = React.useState<any[] | null>(null);
@@ -72,8 +64,9 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     }
 
     if (isPersonalized) window.location.href = "/";
-  }, []);
+  }, [isPersonalized]);
 
+  // load and set references
   useEffect(() => {
     const loadCategories = async () => {
       const response = await CategoryRequest.getCategories();
@@ -101,6 +94,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     loadAuthors();
   }, []);
 
+  // set option categories
   useEffect(() => {
     if (categories) {
       const data = categories.map((e) => {
@@ -113,6 +107,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     }
   }, [categories]);
 
+  // set option sources
   useEffect(() => {
     if (sources) {
       const data = sources.map((e) => {
@@ -125,6 +120,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     }
   }, [sources]);
 
+  // set option authors
   useEffect(() => {
     if (authors) {
       const data = authors.map((e) => {
@@ -139,6 +135,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
 
   const isDisabled = !category && !source && !author;
 
+  // save preferences
   const doSave = async () => {
     const response = await SetPersonalizeRequest.setPersonalized({
       authors: author,

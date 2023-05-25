@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { FormMultiSelect, Navbar } from "src/components/common";
 import { ModalForm } from "src/components/common";
-import { TagIcon } from "@heroicons/react/24/outline";
 import ProfileRequest, { getProfile } from "src/requests/ProfileRequest";
 import CategoryRequest, {
   GetCategoryResponseData,
@@ -18,10 +17,7 @@ import {
   ModalSelectionData,
 } from "src/components/common/modal_form";
 import { PropsValue } from "react-select";
-import api from "src/api";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { log } from "console";
 import SetPersonalizeRequest from "src/requests/PersonalizeRequest";
 
 interface IProfilePageProps {}
@@ -36,12 +32,14 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   const [token, setToken] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
+  // set preferences
   const [preferences, setPreferences] = React.useState<IPreferencesData>({
     sources: null,
     categories: null,
     authors: null,
   });
 
+  // modal state
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [modalOptionData, setModalOptionData] = React.useState<any[] | []>([]);
   const [modalCallback, setModalCallback] = React.useState<ModalOnSave>(
@@ -51,7 +49,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
     PropsValue<any>[] | null
   >(null);
 
-  // Option Data
+  // References to the select components
   const [categories, setCategories] = React.useState<
     GetCategoryResponseData[] | []
   >([]);
@@ -61,11 +59,13 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   const [authors, setAuthors] = React.useState<GetAuthorResponseData[] | []>(
     []
   );
+
+  // Option Data
   const [optionsCategories, setOptionsCategories] = React.useState<any[]>([]);
   const [optionsSources, setOptionsSources] = React.useState<any[]>([]);
   const [optionsAuthors, setOptionsAuthors] = React.useState<any[]>([]);
 
-  // Data
+  // Selected values
   const [category, setCategory] = React.useState<PropsValue<any>[] | null>(
     null
   );
@@ -79,6 +79,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
     };
   }, []);
 
+  // token validation
   useEffect(() => {
     const sessionToken = sessionStorage.getItem("token");
     if (!sessionToken) {
@@ -133,7 +134,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
         data.filter((val) => preferences.categories?.includes(val.label))
       );
     }
-  }, [categories]);
+  }, [categories, preferences.categories]);
 
   useEffect(() => {
     if (sources) {
@@ -147,7 +148,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       // set default source
       setSource(data.filter((val) => preferences.sources?.includes(val.value)));
     }
-  }, [sources]);
+  }, [sources, preferences.sources]);
 
   useEffect(() => {
     if (authors) {
@@ -161,7 +162,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       // set default author
       setAuthor(data.filter((val) => preferences.authors?.includes(val.label)));
     }
-  }, [authors]);
+  }, [authors, preferences.authors]);
 
   const getProfile = async () => {
     const getProfileFromApi = await ProfileRequest.getProfile();

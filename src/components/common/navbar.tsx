@@ -1,11 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Menu, Transition } from "@headlessui/react";
-import {
-  HomeModernIcon,
-  NewspaperIcon,
-  PaperAirplaneIcon,
-  PaperClipIcon,
-} from "@heroicons/react/24/outline";
+import { NewspaperIcon } from "@heroicons/react/24/outline";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 

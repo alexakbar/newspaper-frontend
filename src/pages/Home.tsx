@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "src/components/common";
 import Select from "react-select";
-import { Navigate } from "react-router-dom";
 import CategoryRequest, {
   GetCategoryResponseData,
 } from "src/requests/CategoryRequest";
@@ -27,6 +26,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
   const [sources, setSources] = React.useState<GetSourceResponseData[] | []>(
     []
   );
+  // set option
   const [optionsCategories, setOptionsCategories] = React.useState<any[]>([]);
   const [optionsSources, setOptionsSources] = React.useState<any[]>([]);
 
@@ -41,6 +41,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     endDate: "",
   });
 
+  // handle change date range
   const handleValueChange = (newValue: any) => {
     setDateRange(newValue);
   };
@@ -87,6 +88,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     }, 1000);
   }, [isPersonalized, token]);
 
+  // load reference data
   useEffect(() => {
     const loadCategories = async () => {
       const response = await CategoryRequest.getCategories();
@@ -107,6 +109,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
     getNews();
   }, []);
 
+  // set option categories
   useEffect(() => {
     if (categories) {
       const data = categories.map((e) => {
@@ -268,6 +271,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                     <a
                       href={news.url}
                       target="_blank"
+                      rel="noreferrer"
                       className="inline-block mt-4 text-blue-500 underline hover:text-blue-400"
                     >
                       Read more
