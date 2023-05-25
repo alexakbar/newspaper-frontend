@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Navbar } from "src/components/common";
+import { FormMultiSelect, Navbar } from "src/components/common";
 import { ModalForm } from "src/components/common";
 import { TagIcon } from "@heroicons/react/24/outline";
 import ProfileRequest, { getProfile } from "src/requests/ProfileRequest";
@@ -12,6 +12,7 @@ import SourceRequest, {
 import AuthorRequest, {
   GetAuthorResponseData,
 } from "src/requests/AuthorRequest";
+import { FormInformation } from "src/components/common";
 import {
   ModalOnSave,
   ModalSelectionData,
@@ -20,14 +21,10 @@ import { PropsValue } from "react-select";
 import api from "src/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { log } from "console";
+import SetPersonalizeRequest from "src/requests/PersonalizeRequest";
 
 interface IProfilePageProps {}
-
-interface DefaultResponseAPI {
-  data: Array<any>;
-  message: string;
-  status: string;
-}
 
 interface IPreferencesData {
   sources: string[] | null;
@@ -133,7 +130,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       setOptionsCategories(data);
       // set default category)
       setCategory(
-        data.filter((val) => preferences.categories?.includes(val.value))
+        data.filter((val) => preferences.categories?.includes(val.label))
       );
     }
   }, [categories]);
@@ -162,7 +159,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
       });
       setOptionsAuthors(data);
       // set default author
-      setAuthor(data.filter((val) => preferences.authors?.includes(val.value)));
+      setAuthor(data.filter((val) => preferences.authors?.includes(val.label)));
     }
   }, [authors]);
 
@@ -178,20 +175,18 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
   };
 
   const doSave = async (postData: any) => {
-    await api
-      .post("/set-personalize", postData, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        const responseBody = res.data.data;
-        const userData = responseBody;
-        sessionStorage.setItem("user", JSON.stringify(userData));
-      })
-      .catch((reason: AxiosError<DefaultResponseAPI>) => {
-        toast.error(reason.response?.data.message);
-      });
+    const response = await SetPersonalizeRequest.setPersonalized(postData);
+
+    if (response.data) {
+      const responseBody = response.data;
+      const userData = responseBody;
+
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      toast.success("Personalize saved");
+    } else
+      toast.error(
+        "Something went wrong, please try again later or contact administrator"
+      );
   };
 
   return (
@@ -217,164 +212,62 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
         </div>
         <div className="mt-6 border-t border-gray-100">
           <dl className="divide-y divide-gray-100">
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Username
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
-                {username}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Email
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 dark:text-gray-300 sm:mt-0">
-                {email}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Preferred sources
-              </dt>
-              <dd className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
-                >
-                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                    <div className="flex w-0 flex-1 items-center">
-                      <TagIcon
-                        className="h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                        <span className="truncate font-medium dark:text-gray-300">
-                          {source?.map((e) => e.label).join(", ")}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="ml-4 flex-shrink-0">
-                      <button
-                        onClick={() => {
-                          setModalOptionData(optionsSources);
-                          setModalCallback(() => {
-                            return (selectedValue: ModalSelectionData[]) => {
-                              doSave({
-                                preferred_sources: selectedValue.map(
-                                  (e) => e.value
-                                ),
-                              });
-                              setSource(selectedValue);
-                              setModalOpen(false);
-                            };
-                          });
-                          setModalDefaultValue(source);
-                          setModalOpen(true);
-                        }}
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Authors
-              </div>
-              <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
-                >
-                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                    <div className="flex w-0 flex-1 items-center">
-                      <TagIcon
-                        className="h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                        <span className="truncate font-medium dark:text-gray-300">
-                          {author?.map((e) => e.label).join(", ")}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="ml-4 flex-shrink-0 tex-gray-400">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalOptionData(optionsAuthors);
-                          setModalCallback(() => {
-                            return (selectedValue: ModalSelectionData[]) => {
-                              doSave({
-                                authors: selectedValue.map((e) => e.value),
-                              });
-                              setAuthor(selectedValue);
-                              setModalOpen(false);
-                            };
-                          });
-                          setModalDefaultValue(author);
-                          setModalOpen(true);
-                        }}
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <div className="text-sm font-medium leading-6 text-gray-600 dark:text-gray-300">
-                Categories
-              </div>
-              <div className="mt-2 text-sm text-gray-600 sm:col-span-2 sm:mt-0">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-100 rounded-md border border-gray-200"
-                >
-                  <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                    <div className="flex w-0 flex-1 items-center">
-                      <TagIcon
-                        className="h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                        <span className="truncate font-medium dark:text-gray-300">
-                          {category?.map((e) => e.label).join(", ")}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="ml-4 flex-shrink-0 tex-gray-400">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalOptionData(optionsCategories);
-                          setModalCallback(() => {
-                            return (selectedValue: ModalSelectionData[]) => {
-                              doSave({
-                                categories: selectedValue.map((e) => e.value),
-                              });
-                              setCategory(selectedValue);
-                              setModalOpen(false);
-                            };
-                          });
-                          setModalDefaultValue(category);
-                          setModalOpen(true);
-                        }}
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <FormInformation title="Username" value={username} />
+            <FormInformation title="Email" value={email} />
+            <FormMultiSelect
+              title="Preferred sources"
+              data={source}
+              setUpdate={() => {
+                setModalOptionData(optionsSources);
+                setModalCallback(() => {
+                  return (selectedValue: ModalSelectionData[]) => {
+                    doSave({
+                      preferred_sources: selectedValue.map((e) => e.value),
+                    });
+                    setSource(selectedValue);
+                    setModalOpen(false);
+                  };
+                });
+                setModalDefaultValue(source);
+                setModalOpen(true);
+              }}
+            />
+            <FormMultiSelect
+              title="Authors"
+              data={author}
+              setUpdate={() => {
+                setModalOptionData(optionsAuthors);
+                setModalCallback(() => {
+                  return (selectedValue: ModalSelectionData[]) => {
+                    doSave({
+                      authors: selectedValue.map((e) => e.label),
+                    });
+                    setAuthor(selectedValue);
+                    setModalOpen(false);
+                  };
+                });
+                setModalDefaultValue(author);
+                setModalOpen(true);
+              }}
+            />
+            <FormMultiSelect
+              title="Categories"
+              data={category}
+              setUpdate={() => {
+                setModalOptionData(optionsCategories);
+                setModalCallback(() => {
+                  return (selectedValue: ModalSelectionData[]) => {
+                    doSave({
+                      categories: selectedValue.map((e) => e.label),
+                    });
+                    setCategory(selectedValue);
+                    setModalOpen(false);
+                  };
+                });
+                setModalDefaultValue(category);
+                setModalOpen(true);
+              }}
+            />
           </dl>
         </div>
       </div>

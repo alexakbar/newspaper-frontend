@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import API from "../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import RegisterRequest from "src/requests/Register";
 
 interface IRegisterPageProps {}
 
@@ -54,15 +55,14 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
 
   // do register
   const doRegister = async () => {
-    console.log(API);
-    await API.post("/register", {
+    await RegisterRequest.doRegister({
       username,
       email,
       password,
       c_password,
     })
       .then((res) => {
-        const responseBody = res.data.data;
+        const responseBody = res.data;
         const token = responseBody.token;
         const userData = responseBody.data;
         sessionStorage.setItem("token", token);
@@ -91,12 +91,7 @@ const RegisterPage: React.FunctionComponent<IRegisterPageProps> = (props) => {
         <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
           <div className="px-6 py-4">
             <form className="w-full max-w-md">
-              <div className="flex justify-center mx-auto">
-                <img
-                  className="w-auto h-7 sm:h-8"
-                  src="https://merakiui.com/images/logo.svg"
-                />
-              </div>
+              <div className="flex justify-center mx-auto"></div>
               <div className="flex items-center justify-center mt-4">
                 <h1 className="text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">
                   Register

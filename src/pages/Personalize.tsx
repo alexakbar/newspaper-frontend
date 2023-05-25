@@ -1,12 +1,20 @@
 import React, { useEffect } from "react";
 import { Navbar } from "src/components/common";
 import Select from "react-select";
-import SourceRequest, { GetSourceResponseData } from "src/requests/SourceRequest";
-import CategoryRequest, { GetCategoryResponseData } from "src/requests/CategoryRequest";
-import AuthorRequest, { GetAuthorResponseData } from "src/requests/AuthorRequest";
+import SourceRequest, {
+  GetSourceResponseData,
+} from "src/requests/SourceRequest";
+import CategoryRequest, {
+  GetCategoryResponseData,
+} from "src/requests/CategoryRequest";
+import AuthorRequest, {
+  GetAuthorResponseData,
+} from "src/requests/AuthorRequest";
 import api from "src/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import ProfileRequest from "src/requests/ProfileRequest";
+import SetPersonalizeRequest from "src/requests/PersonalizeRequest";
 
 interface IPersonalizePageProps {}
 
@@ -53,7 +61,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
     const sessionToken = sessionStorage.getItem("token");
 
     if (sessionToken) {
-      setToken(sessionToken!)
+      setToken(sessionToken!);
       const sessionUser = sessionStorage.getItem("user");
       if (sessionUser) {
         const userData = JSON.parse(sessionUser);
@@ -132,24 +140,19 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
   const isDisabled = !category && !source && !author;
 
   const doSave = async () => {
-    await api.post("/set-personalize", {
+    const response = await SetPersonalizeRequest.setPersonalized({
       authors: author,
       categories: category,
       preferred_sources: source,
-    }, {
-      headers: {
-        'Authorization' : 'Bearer ' + token
-      }
-    })
-      .then((res) => {
-        const responseBody = res.data.data;
-        const userData = responseBody;
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        window.location.href = '/'
-      })
-      .catch((reason: AxiosError<DefaultResponseAPI>) => {
-        toast.error(reason.response?.data.message);
-      });
+    });
+
+    if (response.data) {
+      const userData = response.data;
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      window.location.href = "/";
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
@@ -190,7 +193,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select category here..."
                     onChange={(selected) => {
-                      setCategory(selected.map((e) => e.value));
+                      setCategory(selected.map((e) => e.label));
                     }}
                   />
                 </div>
@@ -219,7 +222,7 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select source here..."
                     onChange={(selected) => {
-                      setSource(selected.map((e) => e.value))
+                      setSource(selected.map((e) => e.value));
                     }}
                   />
                 </div>
@@ -248,17 +251,18 @@ const PersonalizePage: React.FunctionComponent<IPersonalizePageProps> = (
                     }}
                     placeholder="Select authors here..."
                     onChange={(selected) => {
-                      setAuthor(selected.map((e) => e.value))
+                      setAuthor(selected.map((e) => e.label));
                     }}
                   />
                 </div>
               </div>
               <div className="mt-6">
-                <button 
+                <button
                   onClick={doSave}
                   disabled={isDisabled}
                   type="button"
-                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                >
                   Submit
                 </button>
               </div>

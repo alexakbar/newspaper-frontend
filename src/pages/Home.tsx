@@ -10,7 +10,6 @@ import SourceRequest, {
   GetSourceResponseData,
 } from "src/requests/SourceRequest";
 import NewsRequest, { SearchNewsResponseData } from "src/requests/NewsRequest";
-import { log } from "console";
 import Datepicker from "react-tailwindcss-datepicker";
 // empty state
 import { EmptyState } from "src/components/common";
@@ -60,7 +59,6 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
       q: filterSearch,
     });
 
-    // console.log(getNewsFromApi);
     setListNews(getNewsFromApi.data);
   };
 
@@ -71,7 +69,6 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
       setToken(sessionToken!);
     } else {
       setToken("");
-      window.location.href = "/login";
     }
 
     // get user data from session storage
@@ -81,8 +78,6 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
 
       if (userData.is_personalized) setPersonalized(true);
       else setPersonalized(false);
-    } else {
-      window.location.href = "/login";
     }
 
     setTimeout(() => {
@@ -188,7 +183,7 @@ const HomePage: React.FunctionComponent<IHomePageProps> = (props) => {
                 name="colors"
                 options={optionsCategories}
                 onChange={(selected) => {
-                  setFilterCategory(selected.map((e) => e.value));
+                  setFilterCategory(selected.map((e) => e.label));
                 }}
                 className="react-select"
                 classNamePrefix="react-select"

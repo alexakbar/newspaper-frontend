@@ -28,7 +28,6 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
     const sessionUser = sessionStorage.getItem("user");
     if (sessionUser) {
       const userData = JSON.parse(sessionUser);
-      console.log(userData);
 
       // get username from user data
       setUsername(userData.username);

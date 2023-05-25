@@ -5,6 +5,8 @@ import API from "../api";
 import { log } from "console";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import ProfileRequest from "src/requests/ProfileRequest";
+import LoginRequest from "src/requests/LoginRequest";
 
 interface ILoginPageProps {}
 
@@ -45,12 +47,12 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
   }, [token]);
 
   const doLogin = async () => {
-    await API.post("/login", {
+    await LoginRequest.doLogin({
       email,
       password,
     })
       .then((res) => {
-        const responseBody = res.data.data;
+        const responseBody = res.data;
         const token = responseBody.token;
         const userData = responseBody.data;
         sessionStorage.setItem("token", token);
@@ -79,12 +81,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
         <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
           <div className="px-6 py-4">
             <form className="w-full max-w-md">
-              <div className="flex justify-center mx-auto">
-                <img
-                  className="w-auto h-7 sm:h-8"
-                  src="https://merakiui.com/images/logo.svg"
-                />
-              </div>
+              <div className="flex justify-center mx-auto"></div>
               <div className="flex items-center justify-center mt-4">
                 <h1 className="text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">
                   Login
